@@ -52,8 +52,8 @@ def gauss_jordan(matriz, resultados):
 def obtener_matriz_y_resultados():
     try:
         n = int(entry_n.get())
-        if n <= 0:
-            messagebox.showerror("Error", "El tamaño de la matriz debe ser un número entero positivo.")
+        if n <= 0 or n > 6:
+            messagebox.showerror("Error", "El tamaño de la matriz debe ser un número entero entre 1 y 6.")
             return
 
         matriz = []
@@ -67,17 +67,17 @@ def obtener_matriz_y_resultados():
 
         soluciones = gauss_jordan(matriz, resultados)
         if soluciones is not None:
-            texto_resultado.delete(1.0, tk.END)
-            texto_resultado.insert(tk.END, "Sistema Compatible Determinado\n")
+            mensaje = "Sistema Compatible Determinado\n"
             for i in range(n):
-                texto_resultado.insert(tk.END, f"x{i+1} = {round(soluciones[i], 4)}\n")
+                mensaje += f"x{i+1} = {round(soluciones[i], 4)}\n"
+            messagebox.showinfo("Resultados", mensaje)
     except ValueError:
         messagebox.showerror("Error", "Debes ingresar números válidos.")
 
 def crear_entradas():
     n = int(entry_n.get())
-    if n <= 0:
-        messagebox.showerror("Error", "El tamaño de la matriz debe ser un número entero positivo.")
+    if n <= 0 or n > 6:
+        messagebox.showerror("Error", "El tamaño de la matriz debe ser un número entero entre 1 y 6.")
         return
 
     for widget in frame_matriz.winfo_children():
@@ -104,22 +104,29 @@ def crear_entradas():
 
 root = tk.Tk()
 root.title("Método de Gauss-Jordan")
+root.configure(bg="#f0f0f0")
 
-label_n = tk.Label(root, text="Tamaño de la matriz (n):")
+label_n = tk.Label(root, text="Tamaño de la matriz (n):", bg="#f0f0f0")
 label_n.grid(row=0, column=0, padx=10, pady=10)
-entry_n = tk.Entry(root)
+
+entry_n = tk.Entry(root, width=5)
 entry_n.grid(row=0, column=1, padx=10, pady=10)
 
-boton_crear_entradas = tk.Button(root, text="Crear entradas", command=crear_entradas)
+boton_crear_entradas = tk.Button(root, text="Crear entradas", command=crear_entradas, bg="#cccccc")
 boton_crear_entradas.grid(row=0, column=2, padx=10, pady=10)
 
-frame_matriz = tk.Frame(root)
+frame_matriz = tk.Frame(root, bg="#f0f0f0")
 frame_matriz.grid(row=1, column=0, columnspan=3, padx=10, pady=10)
 
-boton_calcular = tk.Button(root, text="Calcular", command=obtener_matriz_y_resultados)
+boton_calcular = tk.Button(root, text="Calcular", command=obtener_matriz_y_resultados, bg="#cccccc")
 boton_calcular.grid(row=2, column=0, columnspan=3, padx=10, pady=10)
 
-texto_resultado = tk.Text(root)
-texto_resultado.grid(row=3, column=0, columnspan=3, padx=10, pady=10)
+# Make the GUI responsive
+root.grid_columnconfigure(0, weight=1)
+root.grid_columnconfigure(1, weight=1)
+root.grid_columnconfigure(2, weight=1)
+root.grid_rowconfigure(0, weight=1)
+root.grid_rowconfigure(1, weight=1)
+root.grid_rowconfigure(2, weight=1)
 
 root.mainloop()
