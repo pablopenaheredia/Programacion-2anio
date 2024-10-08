@@ -1,11 +1,11 @@
 import tkinter as tk
 from tkinter import messagebox
 import numpy as np
-import plotly.graph_objects as go
+import matplotlib.pyplot as plt
+from scipy.integrate import quad
 
 def calcular_area_cuadratica(a, b, c, intervalo_inicio, intervalo_fin, num_rectangulos):
     # Calcular área real utilizando la función quad de scipy
-    from scipy.integrate import quad
     def funcion_cuadratica(x):
         return a * x**2 + b * x + c
     area_real, _ = quad(funcion_cuadratica, intervalo_inicio, intervalo_fin)
@@ -30,20 +30,32 @@ def calcular_area_cuadratica(a, b, c, intervalo_inicio, intervalo_fin, num_recta
     texto_resultado.insert(tk.END, f"Error de cálculo: {error:.2f}\n")
 
     # Agregar utilidad: mostrar gráfico de la función cuadrática
-    x_plot = np.linspace(intervalo_inicio, intervalo_fin, 400)
+    x_plot = np.linspace(intervalo_inicio - 10, intervalo_fin + 10, 1000)
     y_plot = [a * x**2 + b * x + c for x in x_plot]
-    fig = go.Figure(data=[go.Scatter(x=x_plot, y=y_plot)])
+
+    plt.plot(x_plot, y_plot, label='Función cuadrática', color='blue')
+    plt.fill_between(x_plot, y_plot, color='blue', alpha=0.1)
+
+    ancho = (intervalo_fin - intervalo_inicio) / num_rectangulos
     for i in range(num_rectangulos):
-        rect = go.Scatter(x=[x_values[i], x_values[i+1], x_values[i+1], x_values[i], x_values[i]], 
-                          y=[0, 0, min(y_values[i], y_values[i+1]), min(y_values[i], y_values[i+1]), 0], 
-                          mode='lines', line=dict(color='blue'))
-        fig.add_trace(rect)
-        rect_sobrante = go.Scatter(x=[x_values[i], x_values[i+1], x_values[i+1], x_values[i], x_values[i]], 
-                                   y=[min(y_values[i], y_values[i+1]), min(y_values[i], y_values[i+1]), max(y_values[i], y_values[i+1]), max(y_values[i], y_values[i+1]), min(y_values[i], y_values[i+1])], 
-                                   mode='lines', line=dict(color='red'))
-        fig.add_trace(rect_sobrante)
-    fig.update_layout(title='Gráfico de la función cuadrática', xaxis_title='x', yaxis_title='y')
-    fig.show()
+        xi = intervalo_inicio + i * ancho
+        altura = a * xi**2 + b * xi + c
+        plt.bar(xi, max(0, altura), width=ancho, color='green', alpha=0.3, edgecolor='black', align='edge')
+
+    for i in range(1, num_rectangulos + 1):
+        xi = intervalo_inicio + i * ancho
+        altura = a * xi**2 + b * xi + c
+        plt.bar(xi - ancho, max(0, altura), width=ancho, color='blue', alpha=0.3, edgecolor='black', align='edge')
+
+    plt.xlabel('x')
+    plt.ylabel('f(x)')
+    plt.title('Gráfico de la función cuadrática y las sumas')
+    plt.legend()
+    plt.grid(True)
+
+    plt.ylim(min(y_plot) - 10, max(y_plot) + 10)
+
+    plt.show()
 
 def obtener_parametros():
     try:
