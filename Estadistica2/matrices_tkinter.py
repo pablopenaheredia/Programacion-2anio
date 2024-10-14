@@ -14,9 +14,11 @@ def obtener_matriz_y_resultados():
         for i in range(n):
             fila = []
             for j in range(n):
-                fila.append(float(entry_matriz[i][j].get()))
+                valor = float(entry_matriz[i][j].get())
+                fila.append(valor)
             matriz.append(fila)
-            resultados.append(float(entry_resultados[i].get()))
+            resultado = float(entry_resultados[i].get())
+            resultados.append(resultado)
 
         # Validar si alguna fila es nula
         for fila in matriz:
@@ -63,7 +65,7 @@ def crear_entradas():
             entry_resultados.append(entry_resultado_i)
     except ValueError:
         messagebox.showerror("Error", "Debes ingresar un número entero válido para el tamaño de la matriz.")
-    
+
 root = tk.Tk()
 root.title("Método de Gauss-Jordan")
 root.configure(bg="#f0f0f0")
@@ -83,7 +85,7 @@ frame_matriz.grid(row=1, column=0, columnspan=3, padx=10, pady=10)
 boton_calcular = tk.Button(root, text="Calcular", command=obtener_matriz_y_resultados, bg="#cccccc")
 boton_calcular.grid(row=2, column=0, columnspan=3, padx=10, pady=10)
 
-# Hacer la GUI responsiva
+# "responsiva"
 root.grid_columnconfigure(0, weight=1)
 root.grid_columnconfigure(1, weight=1)
 root.grid_columnconfigure(2, weight=1)
