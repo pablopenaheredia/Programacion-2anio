@@ -32,6 +32,15 @@ def gauss_jordan(matriz, resultados):
                 matriz[k][j] -= factor * matriz[i][j]
             resultados[k] -= factor * resultados[i]
 
+    # Calcular rangos de matrices
+    rango_coeficiente = len(list(filter(lambda row: any(row), matriz)))
+    rango_matriz_aumentada = len(list(filter(lambda row: any(row), matriz + [resultados])))
+
+    # Verificar si hay un número infinito de soluciones
+    if rango_coeficiente < rank_matriz_aumentada:
+        messagebox.showinfo("El sistema tiene infinitas soluciones.")
+        return None
+
     # Calcular soluciones
     soluciones = [0] * n
     for i in range(n-1, -1, -1):
